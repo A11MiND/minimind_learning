@@ -124,16 +124,38 @@ def init_model(
     device="cuda",
 ):
     from transformers import AutoTokenizer
-    from model.MokioModel import MokioMindForCausalLM
+    from model.model import MokioMindForCausalLM
 
-    # 如果没有指定 tokenizer_path，使用项目根目录下的 model 文件夹
+    # 如果没有指定 tokenizer_path，优先使用项目根目录下的 model/tokenizer，
+    # 如果不存在则回退到 model（有时 tokenizer 文件直接放在 model 下）
     if tokenizer_path is None:
-        # 获取当前文件所在目录的父目录（项目根目录）
         current_dir = os.path.dirname(os.path.abspath(__file__))
         project_root = os.path.dirname(current_dir)
-        tokenizer_path = os.path.join(project_root, "model")
+        candidate1 = os.path.join(project_root, "model", "tokenizer")
+        candidate2 = os.path.join(project_root, "model")
 
-    tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
+        if os.path.isdir(candidate1):
+            tokenizer_path = candidate1
+        elif os.path.isdir(candidate2) and (
+            os.path.exists(os.path.join(candidate2, "tokenizer.json"))
+            or os.path.exists(os.path.join(candidate2, "tokenizer_config.json"))
+        ):
+            tokenizer_path = candidate2
+        else:
+            # 保留默认位置，即 model/tokenizer（如果都不存在，之后的错误会提示）
+            tokenizer_path = candidate1
+
+    # Load tokenizer from a local directory and avoid querying the Hugging Face Hub
+    # Use a relative path to prevent huggingface_hub from treating an absolute
+    # filesystem path as a repo id.
+    rel_tokenizer_path = os.path.relpath(tokenizer_path)
+    Logger(f"Loading tokenizer from {rel_tokenizer_path}")
+
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(rel_tokenizer_path, local_files_only=True)
+    except Exception as e:
+        Logger(f"Local tokenizer load failed: {e}. Retrying with use_fast=False")
+        tokenizer = AutoTokenizer.from_pretrained(rel_tokenizer_path, local_files_only=True, use_fast=False)
 
     model = MokioMindForCausalLM(lm_config)
 

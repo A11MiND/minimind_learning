@@ -412,8 +412,10 @@ class MokioMindForCausalLM(PreTrainedModel, GenerationMixin):
         # logits to keep 是整数，那就保留最后Logits_to_keep个logits，否则按照提供的索引保留
         # 生成的时候只需要保留最后几个logits来预测下一个token，其他的logits设置为负无穷，这样在softmax之后就不会被选中
         slice_indices=(
-            slice(-Logits_to_keep, None) 
-            if isinstance(Logits_to_keep, int) 
+            slice(-Logits_to_keep, None)
+            if isinstance(Logits_to_keep, int) and Logits_to_keep > 0
+            else slice(None)
+            if isinstance(Logits_to_keep, int)
             else Logits_to_keep
         )
         logits = self.lm_head(hidden_states[:, slice_indices, :])

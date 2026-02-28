@@ -1,55 +1,46 @@
-import json
-
-from torch.utils.data import Dataset
 import torch
 import os
+from torch.utils.data import Dataset
+from datasets import load_dataset
 
-#是指tokenizer的并行化，设置为false可以避免在多线程环境下出现问题
+# 禁用 tokenizer 多进程，避免 DataLoader 多线程冲突
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-# 写dataset类，继承torch.utils.data.Dataset
+
 class PretrainDataset(Dataset):
     def __init__(self, data_path, tokenizer, max_length=512):
         super().__init__()
         self.tokenizer = tokenizer
         self.max_length = max_length
-        self.samples = self.load_data(data_path)
+        # 惰性加载 jsonl，避免一次性读入大文件占用内存
+        self.samples = load_dataset("json", data_files=data_path, split="train")
 
-# 实现dataset内定的方法
-    def load_data(self,path):
-        samples=[]
-        with open(path, "r", encoding="utf-8") as f:
-            for line_num,line in enumerate(f,1):
-                data=json.loads(line.strip())
-                samples.append(data)
-        return samples
-
-# __len__
     def __len__(self):
         return len(self.samples)
-    
-# __getitem__
+
     def __getitem__(self, index):
-        sample=self.samples[index]
+        sample = self.samples[index]
 
-        encoding=self.tokenizer(
+        # Step 1: tokenize，预留 BOS + EOS 2 个位置
+        tokens = self.tokenizer(
             str(sample["text"]),
-            max_length=self.max_length,
-            padding="max_length",
+            add_special_tokens=False,
+            max_length=self.max_length - 2,
             truncation=True,
-            return_tensors="pt",
+        ).input_ids
+
+        # Step 2: 拼接 BOS + tokens + EOS
+        tokens = [self.tokenizer.bos_token_id] + tokens + [self.tokenizer.eos_token_id]
+
+        # Step 3: 右侧 PAD 补齐到 max_length
+        input_ids = tokens + [self.tokenizer.pad_token_id] * (
+            self.max_length - len(tokens)
         )
-        #(max_length,)的张量，去掉batch维度
-        input_ids=encoding["input_ids"].squeeze()
+        input_ids = torch.tensor(input_ids, dtype=torch.long)
 
-        # [1, ,1, 1, 0 , 0 ]
-        loss_mask=input_ids!=self.tokenizer.pad_token_id
+        # Step 4: labels 与 input_ids 相同，PAD 位置置 -100，CrossEntropyLoss 自动忽略
+        labels = input_ids.clone()
+        labels[input_ids == self.tokenizer.pad_token_id] = -100
 
-        # 自回归
-        X = torch.tensor(input_ids[:-1], dtype=torch.long)
-        Y = torch.tensor(input_ids[1:], dtype=torch.long)
-
-        loss_mask=torch.tensor(loss_mask[1:], dtype=torch.long)
-
-        return X, Y, loss_mask
+        return input_ids, labels
 

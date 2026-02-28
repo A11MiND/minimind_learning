@@ -33,14 +33,14 @@ warnings.filterwarnings("ignore")
 
 
 def train_epoch(epoch, loader, iters, start_step=0, wandb=None):
-    loss_fct = nn.CrossEntropyLoss(reduction="none")
+    # ignore_index=-100：PAD 位置自动不计入 loss
+    loss_fct = nn.CrossEntropyLoss(ignore_index=-100)
     start_time = time.time()  # 记录开始时间
 
     # 遍历数据批次
-    for step, (X, Y, loss_mask) in enumerate(loader, start=start_step + 1):
+    for step, (X, Y) in enumerate(loader, start=start_step + 1):
         X = X.to(args.device)
         Y = Y.to(args.device)
-        loss_mask = loss_mask.to(args.device)
 
         lr = get_lr(epoch * iters + step, args.epochs * iters, args.learning_rate)
 
@@ -48,18 +48,16 @@ def train_epoch(epoch, loader, iters, start_step=0, wandb=None):
             param_group["lr"] = lr
 
         with autocast_ctx:
-            # 前向传播
+            # 前向传播，X 是 input_ids，Y 是 labels（PAD=-100）
             res = model(X)
 
             loss = loss_fct(
                 res.logits.view(-1, res.logits.size(-1)),  # [batch*seq, vocab_size]
                 Y.view(-1),  # [batch*seq]
-            ).view(Y.size())  # 恢复为 [batch_size, seq_len]
+            )
 
-            loss = (loss * loss_mask).sum() / loss_mask.sum()
+            loss += getattr(res, 'aux_loss', 0)
 
-            loss+=getattr(res, 'aux_loss', 0)
-            
             loss = loss / args.accumulation_steps
 
         scaler.scale(loss).backward()
