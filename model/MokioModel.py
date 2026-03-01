@@ -526,6 +526,7 @@ class MokioMindForCausalLM(PreTrainedModel, GenerationMixin):
         past_key_values: Optional[List[Tuple[torch.Tensor, torch.Tensor]]] = None,
         use_cache: bool = False,
         logits_to_keep: Union[int, torch.Tensor] = 0,
+        labels=None,
         **args,
     ):
         h, past_kvs, aux_loss = self.model(
@@ -546,8 +547,16 @@ class MokioMindForCausalLM(PreTrainedModel, GenerationMixin):
             slice_indices = logits_to_keep
 
         logits = self.lm_head(h[:, slice_indices, :])
-
+        
+        loss = None
+        if labels is not None:
+            loss = F.cross_entropy(
+                logits.view(-1, logits.size(-1)),
+                labels.view(-1),
+                ignore_index=-1
+            )
         return CausalLMOutputWithPast(
+            loss=loss,
             logits=logits,
             past_key_values=past_kvs,
             hidden_states=h,
