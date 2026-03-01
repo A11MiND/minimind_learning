@@ -4,8 +4,8 @@ import warnings
 import numpy as np
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, TextStreamer
-from model.model import MokioMindConfig, MokioMindForCausalLM
-from trainer.trainer_utlis import setup_seed
+from model.MokioModel import MokioMindConfig, MokioMindForCausalLM
+from trainer.trainer_utils import setup_seed
 
 warnings.filterwarnings("ignore")
 
@@ -43,7 +43,7 @@ def main():
     parser.add_argument("--save_dir", default="out", type=str, help="模型权重目录")
     parser.add_argument(
         "--weight",
-        default="pretrain",
+        default="full_sft",
         type=str,
         help="权重名称前缀（pretrain, full_sft, rlhf, reason, ppo_actor, grpo, spo）",
     )

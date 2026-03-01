@@ -15,9 +15,9 @@ from torch import optim, nn  # 优化器和神经网络模块
 from torch.nn.parallel import DistributedDataParallel  # 分布式数据并行
 from torch.utils.data import DataLoader, DistributedSampler  # 数据加载器
 
-from model.model import MokioMindConfig 
+from model.MokioModel import MokioMindConfig 
 from dataset.lm_dataset import PretrainDataset 
-from trainer.trainer_utlis import (  # 训练工具函数
+from trainer.trainer_utils import (  # 训练工具函数
     get_lr,
     Logger,
     is_main_process,
@@ -33,14 +33,14 @@ warnings.filterwarnings("ignore")
 
 
 def train_epoch(epoch, loader, iters, start_step=0, wandb=None):
-    # ignore_index=-100：PAD 位置自动不计入 loss
-    loss_fct = nn.CrossEntropyLoss(ignore_index=-100)
+    loss_fct = nn.CrossEntropyLoss(reduction="none")
     start_time = time.time()  # 记录开始时间
 
     # 遍历数据批次
-    for step, (X, Y) in enumerate(loader, start=start_step + 1):
+    for step, (X, Y, loss_mask) in enumerate(loader, start=start_step + 1):
         X = X.to(args.device)
         Y = Y.to(args.device)
+        loss_mask = loss_mask.to(args.device)
 
         lr = get_lr(epoch * iters + step, args.epochs * iters, args.learning_rate)
 
@@ -48,16 +48,18 @@ def train_epoch(epoch, loader, iters, start_step=0, wandb=None):
             param_group["lr"] = lr
 
         with autocast_ctx:
-            # 前向传播，X 是 input_ids，Y 是 labels（PAD=-100）
+            # 前向传播
             res = model(X)
 
             loss = loss_fct(
                 res.logits.view(-1, res.logits.size(-1)),  # [batch*seq, vocab_size]
                 Y.view(-1),  # [batch*seq]
-            )
+            ).view(Y.size())  # 恢复为 [batch_size, seq_len]
 
-            loss += getattr(res, 'aux_loss', 0)
+            loss = (loss * loss_mask).sum() / loss_mask.sum()
 
+            loss+=res.aux_loss
+            
             loss = loss / args.accumulation_steps
 
         scaler.scale(loss).backward()
@@ -257,7 +259,7 @@ if __name__ == "__main__":
     # 📚 上下文管理器知识点
     # CPU不支持autocast，使用nullcontext作为空操作
     autocast_ctx = (
-        nullcontext() if device_type == "cpu" else torch.amp.autocast("cuda", dtype=dtype)
+        nullcontext() if device_type == "cpu" else torch.cuda.amp.autocast(dtype=dtype)
     )
 
     # ========== 4. 配置WandB实验跟踪 ==========
@@ -299,7 +301,7 @@ if __name__ == "__main__":
 
     train_sampler = DistributedSampler(train_ds) if dist.is_initialized() else None
 
-    scaler = torch.amp.GradScaler("cuda", enabled=(args.dtype == "float16"))
+    scaler = torch.cuda.amp.GradScaler(enabled=(args.dtype == "float16"))
 
     optimizer = optim.AdamW(model.parameters(), lr=args.learning_rate)
 
