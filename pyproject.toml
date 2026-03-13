@@ -1,7 +1,7 @@
 [project]
-name = "minimind"
+name = "nanomoe-instruct"
 version = "0.1.0"
-description = "Add your description here"
+description = "面向边缘计算与垂直领域（医疗/金融）的轻量级稀疏专家大模型框架"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [

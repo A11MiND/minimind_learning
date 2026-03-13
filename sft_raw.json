@@ -1,0 +1,296 @@
+[
+  {
+    "input": "Why is my withdrawal suspended?"
+  },
+  {
+    "input": "My withdrawal has been suspended. Can you tell me why?"
+  },
+  {
+    "input": "What is the reason for the suspension of my withdrawal?"
+  },
+  {
+    "input": "I tried to withdraw funds but the transaction shows as suspended."
+  },
+  {
+    "input": "Why was my withdrawal request put on hold?"
+  },
+  {
+    "input": "My account withdrawal is suspended. Please explain."
+  },
+  {
+    "input": "Can you check why my funds withdrawal is blocked?"
+  },
+  {
+    "input": "Withdrawal suspended due to unusual activity? That's my assumption, but please confirm."
+  },
+  {
+    "input": "I received a notification that my withdrawal is suspended. What now?"
+  },
+  {
+    "input": "Is there a problem with my bank that caused the withdrawal suspension?"
+  },
+  {
+    "input": "Why did my withdrawal get suspended immediately after I requested it?"
+  },
+  {
+    "input": "My withdrawal is stuck on 'suspended'. How do I fix this?"
+  },
+  {
+    "input": "Please clarify the reason for suspending my withdrawal."
+  },
+  {
+    "input": "I need to know why my withdrawal is under review and suspended."
+  },
+  {
+    "input": "Does a suspended withdrawal mean my account is frozen?"
+  },
+  {
+    "input": "Why is my withdrawal suspended for security reasons?"
+  },
+  {
+    "input": "I haven't received my money and the status says suspended. Why?"
+  },
+  {
+    "input": "My withdrawal is suspended due to verification issues?"
+  },
+  {
+    "input": "What documents do I need to provide to unsuspend my withdrawal?"
+  },
+  {
+    "input": "The system suspended my withdrawal automatically. What triggered this?"
+  },
+  {
+    "input": "Why is my withdrawal suspended even though I am verified?"
+  },
+  {
+    "input": "My withdrawal is suspended. Was there a technical error?"
+  },
+  {
+    "input": "I want to file a complaint about my suspended withdrawal."
+  },
+  {
+    "input": "Please unsuspend my withdrawal immediately. Why was it suspended?"
+  },
+  {
+    "input": "Is my withdrawal suspended because of the daily limit?"
+  },
+  {
+    "input": "Why is my withdrawal suspended while my friend's went through?"
+  },
+  {
+    "input": "My withdrawal has been suspended for 3 days. What is going on?"
+  },
+  {
+    "input": "I accidentally canceled the withdrawal and now it's suspended. Why?"
+  },
+  {
+    "input": "Why is my withdrawal suspended after the funds left my account?"
+  },
+  {
+    "input": "Does a suspended withdrawal mean the transaction failed?"
+  },
+  {
+    "input": "My withdrawal is suspended. I need this money urgently."
+  },
+  {
+    "input": "Why is my withdrawal suspended? I've used this method before."
+  },
+  {
+    "input": "Please investigate why my withdrawal is suspended."
+  },
+  {
+    "input": "Withdrawal suspended due to AML check? Can you confirm?"
+  },
+  {
+    "input": "I updated my profile, but my withdrawal is still suspended. Why?"
+  },
+  {
+    "input": "Why is my withdrawal suspended and what is the estimated resolution time?"
+  },
+  {
+    "input": "My withdrawal is suspended. Is this a permanent block?"
+  },
+  {
+    "input": "The app shows my withdrawal as suspended. I'm very concerned."
+  },
+  {
+    "input": "Why is my withdrawal suspended when I have sufficient balance?"
+  },
+  {
+    "input": "My withdrawal is suspended due to a mismatch in details. What details?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? I already passed KYC."
+  },
+  {
+    "input": "Please reactivate my suspended withdrawal. Tell me the reason."
+  },
+  {
+    "input": "My withdrawal is suspended. Is there a hold on my entire account?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? It says 'contact support'."
+  },
+  {
+    "input": "I can't access my funds because the withdrawal is suspended. Why?"
+  },
+  {
+    "input": "Why is my withdrawal suspended for a manual review?"
+  },
+  {
+    "input": "My withdrawal is suspended. Is this related to the recent policy update?"
+  },
+  {
+    "input": "Why was my withdrawal suspended without any notification?"
+  },
+  {
+    "input": "I want to know the specific reason my withdrawal is suspended."
+  },
+  {
+    "input": "My withdrawal is suspended. How long does this usually take?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? I need to pay bills."
+  },
+  {
+    "input": "The support team said my withdrawal is suspended due to risk control. Why?"
+  },
+  {
+    "input": "My withdrawal is suspended. Can I cancel it and try again?"
+  },
+  {
+    "input": "Why is my withdrawal suspended when the recipient details are correct?"
+  },
+  {
+    "input": "My withdrawal is suspended. Is there a network issue?"
+  },
+  {
+    "input": "Please provide the reason for the suspended withdrawal status."
+  },
+  {
+    "input": "Why is my withdrawal suspended? I've been a user for years."
+  },
+  {
+    "input": "My withdrawal is suspended. I suspect it's a glitch."
+  },
+  {
+    "input": "Why is my withdrawal suspended and how can I expedite it?"
+  },
+  {
+    "input": "My withdrawal is suspended due to a compliance check. What triggered it?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? The funds are deducted but not received."
+  },
+  {
+    "input": "My withdrawal is suspended. I demand an explanation."
+  },
+  {
+    "input": "Why is my withdrawal suspended for a large amount but not for small ones?"
+  },
+  {
+    "input": "My withdrawal is suspended. I have already verified my identity twice."
+  },
+  {
+    "input": "Why is my withdrawal suspended? It shows 'pending' and then 'suspended'."
+  },
+  {
+    "input": "My withdrawal is suspended. Is this because of the weekend?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? The transaction hash is missing."
+  },
+  {
+    "input": "My withdrawal is suspended. Please escalate this issue."
+  },
+  {
+    "input": "Why is my withdrawal suspended? I need the money for an emergency."
+  },
+  {
+    "input": "My withdrawal is suspended. Is it because I logged in from a new device?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? The app keeps crashing."
+  },
+  {
+    "input": "My withdrawal is suspended. I want to speak to a manager."
+  },
+  {
+    "input": "Why is my withdrawal suspended due to 'business reasons'? What does that mean?"
+  },
+  {
+    "input": "My withdrawal is suspended. I've sent all the requested documents."
+  },
+  {
+    "input": "Why is my withdrawal suspended? It's been longer than the stated processing time."
+  },
+  {
+    "input": "My withdrawal is suspended. Is there a fee to release it?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? The status changed without explanation."
+  },
+  {
+    "input": "My withdrawal is suspended. Is my account flagged?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? I followed all the rules."
+  },
+  {
+    "input": "My withdrawal is suspended. Can you manually process it?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? The recipient bank rejected it?"
+  },
+  {
+    "input": "My withdrawal is suspended. What information is missing on my end?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? I see other people withdrawing fine."
+  },
+  {
+    "input": "My withdrawal is suspended. Is this a common issue?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? I need a timeline for resolution."
+  },
+  {
+    "input": "My withdrawal is suspended. I'm worried my account was hacked."
+  },
+  {
+    "input": "Why is my withdrawal suspended? The support chat is not helping."
+  },
+  {
+    "input": "My withdrawal is suspended due to a system upgrade. When will it be back?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? It says 'fraud check' but I'm the account owner."
+  },
+  {
+    "input": "My withdrawal is suspended. I want to close my account because of this."
+  },
+  {
+    "input": "Why is my withdrawal suspended? I have screenshots of the error."
+  },
+  {
+    "input": "My withdrawal is suspended. Is this because of a chargeback on a previous deposit?"
+  },
+  {
+    "input": "Why is my withdrawal suspended? I've never had this issue before."
+  },
+  {
+    "input": "My withdrawal is suspended. Please unlock it so I can trade."
+  },
+  {
+    "input": "Why is my withdrawal suspended? The money is showing as 'on hold'."
+  },
+  {
+    "input": "My withdrawal is suspended. I'm losing money because of the delay."
+  },
+  {
+    "input": "Why is my withdrawal suspended? I'm trying to withdraw to my usual wallet."
+  },
+  {
+    "input": "My withdrawal is suspended. What are the next steps?"
+  }
+]

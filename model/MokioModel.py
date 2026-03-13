@@ -1,4 +1,4 @@
-# mokiomind_moe_model.py
+# nanomoe_moe_model.py
 import math
 from typing import Optional, Tuple, List, Union
 
@@ -13,8 +13,8 @@ from transformers.activations import ACT2FN
 # ----------------------------
 # Config
 # ----------------------------
-class MokioMindConfig(PretrainedConfig):
-    model_type = "mokiomind"
+class NanoMoEConfig(PretrainedConfig):
+    model_type = "nanomoe"
 
     def __init__(
         self,
@@ -166,7 +166,7 @@ def repeat_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
 # Attention
 # ----------------------------
 class Attention(nn.Module):
-    def __init__(self, args: MokioMindConfig):
+    def __init__(self, args: NanoMoEConfig):
         super().__init__()
 
         self.num_key_value_heads = (
@@ -264,7 +264,7 @@ class Attention(nn.Module):
 # FeedForward (Dense) 
 # ----------------------------
 class FeedForward(nn.Module):
-    def __init__(self, config: MokioMindConfig):
+    def __init__(self, config: NanoMoEConfig):
         super().__init__()
         if config.intermediate_size is None:
             intermediate_size = int(config.hidden_size * 8 / 3)
@@ -285,7 +285,7 @@ class FeedForward(nn.Module):
 # MoE Gate
 # ----------------------------
 class MoEGate(nn.Module):
-    def __init__(self, config: MokioMindConfig):
+    def __init__(self, config: NanoMoEConfig):
         super().__init__()
         self.config = config
         self.top_k = config.num_experts_per_tok
@@ -343,7 +343,7 @@ class MoEGate(nn.Module):
 # MoE FeedForward (dispatching)
 # ----------------------------
 class MoEFeedForward(nn.Module):
-    def __init__(self, config: MokioMindConfig):
+    def __init__(self, config: NanoMoEConfig):
         super().__init__()
         self.config = config
         self.experts = nn.ModuleList([FeedForward(config) for _ in range(config.n_routed_experts)])
@@ -407,8 +407,8 @@ class MoEFeedForward(nn.Module):
 # ----------------------------
 # Block + Model + LM wrapper
 # ----------------------------
-class MokioMindBlock(nn.Module):
-    def __init__(self, layer_id: int, config: MokioMindConfig):
+class NanoMoEBlock(nn.Module):
+    def __init__(self, layer_id: int, config: NanoMoEConfig):
         super().__init__()
         self.layer_id = layer_id
         self.self_attn = Attention(config)
@@ -437,8 +437,8 @@ class MokioMindBlock(nn.Module):
         return hidden_states, present_key_value
 
 
-class MokioMindModel(nn.Module):
-    def __init__(self, config: MokioMindConfig):
+class NanoMoEModel(nn.Module):
+    def __init__(self, config: NanoMoEConfig):
         super().__init__()
         self.config = config
         self.vocab_size = config.vocab_size
@@ -446,7 +446,7 @@ class MokioMindModel(nn.Module):
 
         self.embed_tokens = nn.Embedding(config.vocab_size, config.hidden_size)
         self.dropout = nn.Dropout(config.dropout)
-        self.layers = nn.ModuleList([MokioMindBlock(i, config) for i in range(self.num_hidden_layers)])
+        self.layers = nn.ModuleList([NanoMoEBlock(i, config) for i in range(self.num_hidden_layers)])
         self.norm = RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
 
         freqs_cos, freqs_sin = precompute_freqs(
@@ -508,13 +508,13 @@ class MokioMindModel(nn.Module):
         return hidden_states, presents, aux_loss
 
 
-class MokioMindForCausalLM(PreTrainedModel, GenerationMixin):
-    config_class = MokioMindConfig
+class NanoMoEForCausalLM(PreTrainedModel, GenerationMixin):
+    config_class = NanoMoEConfig
 
-    def __init__(self, config: MokioMindConfig):
+    def __init__(self, config: NanoMoEConfig):
         super().__init__(config)
         self.config = config
-        self.model = MokioMindModel(config)
+        self.model = NanoMoEModel(config)
         self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)
         # tie weights
         self.model.embed_tokens.weight = self.lm_head.weight
